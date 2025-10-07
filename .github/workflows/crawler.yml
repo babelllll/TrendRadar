@@ -58,6 +58,7 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_SMTP_SERVER: ${{ secrets.EMAIL_SMTP_SERVER }}
           EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
+          NTFY_CONFIG: ${{ secrets.NTFY_CONFIG }}
           GITHUB_ACTIONS: true
         run: python main.py
 
