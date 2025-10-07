@@ -33,16 +33,6 @@ notification:
   dingtalk_batch_size: 20000 # 钉钉消息分批大小（字节）(这个配置也别动)
   batch_send_interval: 1 # 批次发送间隔（秒）
   feishu_message_separator: "━━━━━━━━━━━━━━━━━━━" # feishu 消息分割线
-   # ==== 这里声明我们要使用 ntfy ====
-  ntfy:
-    # 公共服务器地址（如果你自行部署 ntfy，请改成自己的域名）
-    server: "https://ntfy.sh"
-    # 你的 topic（必须和 secret 中的 topic 完全一致）
-    topic: "trendradar-push-a8k2n9sXyZ"
-    # 如果你在 ntfy 上为这个 topic 配置了用户名/密码，请在 secret 中一并提供
-    # 这里可以留空，代码会在运行时从 NTFY_CONFIG 环境变量里读取
-    username: ""   # 可选
-    password: ""   # 可选
     
 
   silent_push:
