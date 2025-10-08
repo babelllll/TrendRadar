@@ -3554,10 +3554,13 @@ def send_to_ntfy(
                 )
                 time.sleep(10)  # 等待10秒后重试
                 # 重试一次
+                # --- V 添加开始 V ---
+            if 'charset' not in current_headers.get('Content-Type', ''):
+                current_headers['Content-Type'] = 'text/plain; charset=utf-8'
+                # --- A 添加结束 A ---
                 retry_response = requests.post(
                     url,
                     headers=current_headers,
-                    data=batch_content.encode("utf-8"),
                     proxies=proxies,
                     timeout=30,
                 )
