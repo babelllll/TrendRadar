@@ -2450,7 +2450,7 @@ def render_dingtalk_content(
 
     text_content += f"**总新闻数：** {total_titles}\n\n"
     text_content += f"**时间：** {now.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-    text_content += f"**类型：** 热点分析报告\n\n"
+    text_content += f"**类型：** News Report\n\n"
 
     text_content += "---\n\n"
 
@@ -2563,7 +2563,7 @@ def split_content_into_batches(
     elif format_type == "dingtalk":
         base_header = f"**总新闻数：** {total_titles}\n\n"
         base_header += f"**时间：** {now.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-        base_header += f"**类型：** 热点分析报告\n\n"
+        base_header += f"**类型：** News Report\n\n"
         base_header += "---\n\n"
 
     base_footer = ""
@@ -3168,7 +3168,7 @@ def send_to_dingtalk(
         payload = {
             "msgtype": "markdown",
             "markdown": {
-                "title": f"TrendRadar 热点分析报告 - {report_type}",
+                "title": f"TrendRadar News Report - {report_type}",
                 "text": batch_content,
             },
         }
@@ -3389,7 +3389,7 @@ def send_to_email(
 
         # 设置邮件主题
         now = get_beijing_time()
-        subject = f"TrendRadar 热点分析报告 - {report_type} - {now.strftime('%m月%d日 %H:%M')}"
+        subject = f"TrendRadar News Report - {report_type} - {now.strftime('%m月%d日 %H:%M')}"
         msg["Subject"] = Header(subject, "utf-8")
 
         # 设置其他标准 header
@@ -3399,7 +3399,7 @@ def send_to_email(
 
         # 添加纯文本部分（作为备选）
         text_content = f"""
-TrendRadar 热点分析报告
+TrendRadar News Report
 ========================
 报告类型：{report_type}
 生成时间：{now.strftime('%Y-%m-%d %H:%M:%S')}
@@ -3483,7 +3483,7 @@ def send_to_ntfy(
     headers = {
         "Content-Type": "text/plain; charset=utf-8",
         "Markdown": "yes",
-        "Title": f"TrendRadar 热点分析报告 - {report_type}",
+        "Title": f"TrendRadar News Report - {report_type}",  # <-- 改成纯英文
         "Priority": "default",
         "Tags": "newspaper,📰",
     }
@@ -3526,7 +3526,7 @@ def send_to_ntfy(
             batch_header = f"**[第 {i}/{len(batches)} 批次]**\n\n"
             batch_content = batch_header + batch_content
             current_headers["Title"] = (
-                f"TrendRadar 热点分析报告 - {report_type} ({i}/{len(batches)})"
+                f"TrendRadar News Report - {report_type} ({i}/{len(batches)})"
             )
 
         try:
