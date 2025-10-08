@@ -67,7 +67,7 @@ jobs:
           GITHUB_ACTIONS: true
           PYTHONIOENCODING: utf-8   # <--- 请添加这一行！！！
 
-        run: python main.py
+        run: PYTHONUTF8=1 python main.py
 
       - name: Commit and push if changes
         run: |
