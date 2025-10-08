@@ -1565,7 +1565,7 @@ def generate_html_report(
         elif mode == "incremental":
             filename = "当日增量.html"
         else:
-            filename = "当日汇总.html"
+            filename = "Daily Summary.html"
     else:
         filename = f"{format_time_filename()}.html"
 
@@ -2029,7 +2029,7 @@ def render_html_content(
         elif mode == "incremental":
             html += "增量模式"
         else:
-            html += "当日汇总"
+            html += "Daily Summary"
     else:
         html += "实时分析"
 
@@ -2957,7 +2957,7 @@ def split_content_into_batches(
 def send_to_notifications(
     stats: List[Dict],
     failed_ids: Optional[List] = None,
-    report_type: str = "当日汇总",
+    report_type: str = "Daily Summary",
     new_titles: Optional[Dict] = None,
     id_to_name: Optional[Dict] = None,
     update_info: Optional[Dict] = None,
@@ -3616,7 +3616,7 @@ class NewsAnalyzer:
             "mode_name": "增量模式",
             "description": "增量模式（只关注新增新闻，无新增时不推送）",
             "realtime_report_type": "实时增量",
-            "summary_report_type": "当日汇总",
+            "summary_report_type": "Daily Summary",
             "should_send_realtime": True,
             "should_generate_summary": True,
             "summary_mode": "daily",
@@ -3634,7 +3634,7 @@ class NewsAnalyzer:
             "mode_name": "当日汇总模式",
             "description": "当日汇总模式（所有匹配新闻 + 新增新闻区域 + 按时推送）",
             "realtime_report_type": "",
-            "summary_report_type": "当日汇总",
+            "summary_report_type": "Daily Summary",
             "should_send_realtime": False,
             "should_generate_summary": True,
             "summary_mode": "daily",
@@ -3888,7 +3888,7 @@ class NewsAnalyzer:
     def _generate_summary_report(self, mode_strategy: Dict) -> Optional[str]:
         """生成汇总报告（带通知）"""
         summary_type = (
-            "当前榜单汇总" if mode_strategy["summary_mode"] == "current" else "当日汇总"
+            "当前榜单汇总" if mode_strategy["summary_mode"] == "current" else "Daily Summary"
         )
         print(f"生成{summary_type}报告...")
 
@@ -3930,7 +3930,7 @@ class NewsAnalyzer:
 
     def _generate_summary_html(self, mode: str = "daily") -> Optional[str]:
         """生成汇总HTML"""
-        summary_type = "当前榜单汇总" if mode == "current" else "当日汇总"
+        summary_type = "当前榜单汇总" if mode == "current" else "Daily Summary"
         print(f"生成{summary_type}HTML...")
 
         # 加载分析数据
