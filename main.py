@@ -3485,7 +3485,7 @@ def send_to_ntfy(
         "Markdown": "yes",
         "Title": f"TrendRadar News Report - {report_type}",  # <-- 改成纯英文
         "Priority": "default",
-        "Tags": "newspaper,📰",
+        "Tags": "newspaper",
     }
 
     if token:
