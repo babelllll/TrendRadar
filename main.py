@@ -3537,6 +3537,7 @@ def send_to_ntfy(
             response = requests.post(
                 url,
                 headers=current_headers,
+                data=batch_content.encode('utf-8'),  # <-- 添加这一行！
                 proxies=proxies,
                 timeout=30,
             )
@@ -3561,6 +3562,7 @@ def send_to_ntfy(
                 retry_response = requests.post(
                     url,
                     headers=current_headers,
+                    data=batch_content.encode('utf-8'),  # <-- 添加这一行！
                     proxies=proxies,
                     timeout=30,
                 )
