@@ -65,6 +65,8 @@ jobs:
           EMAIL_SMTP_PORT: ${{ secrets.EMAIL_SMTP_PORT }}
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
           GITHUB_ACTIONS: true
+          PYTHONIOENCODING: utf-8   # <--- 请添加这一行！！！
+
         run: python main.py
 
       - name: Commit and push if changes
