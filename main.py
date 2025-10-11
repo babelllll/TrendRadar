@@ -1006,15 +1006,15 @@ def count_word_frequency(
     # 确定处理的数据源和新增标记逻辑
     if mode == "incremental":
         if is_first_today:
-            # 增量模式 + 当天第一次：处理所有新闻，都标记为新增
+            # incrementalmode + 当天第一次：处理所有新闻，都标记为新增
             results_to_process = results
             all_news_are_new = True
         else:
-            # 增量模式 + 当天非第一次：只处理新增的新闻
+            # incrementalmode + 当天非第一次：只处理新增的新闻
             results_to_process = new_titles if new_titles else {}
             all_news_are_new = True
     elif mode == "current":
-        # current 模式：只处理当前时间批次的新闻，但统计信息来自全部历史
+        # current mode：只处理当前时间批次的新闻，但统计信息来自全部历史
         if title_info:
             latest_time = None
             for source_titles in title_info.values():
@@ -1039,7 +1039,7 @@ def count_word_frequency(
                             results_to_process[source_id] = filtered_titles
 
                 print(
-                    f"当前榜单模式：最新时间 {latest_time}，筛选出 {sum(len(titles) for titles in results_to_process.values())} 条当前榜单新闻"
+                    f"currentmode：最新时间 {latest_time}，筛选出 {sum(len(titles) for titles in results_to_process.values())} 条current新闻"
                 )
             else:
                 results_to_process = results
@@ -1047,7 +1047,7 @@ def count_word_frequency(
             results_to_process = results
         all_news_are_new = False
     else:
-        # 当日汇总模式：处理所有新闻
+        # dailymode：处理所有新闻
         results_to_process = results
         all_news_are_new = False
         total_input_news = sum(len(titles) for titles in results.values())
@@ -1056,7 +1056,7 @@ def count_word_frequency(
             if len(word_groups) == 1 and word_groups[0]["group_key"] == "全部新闻"
             else "频率词过滤"
         )
-        print(f"当日汇总模式：处理 {total_input_news} 条新闻，模式：{filter_status}")
+        print(f"dailymode：处理 {total_input_news} 条新闻，mode：{filter_status}")
 
     word_stats = {}
     total_titles = 0
@@ -1090,7 +1090,7 @@ def count_word_frequency(
             if not matches_frequency_words:
                 continue
 
-            # 如果是增量模式或 current 模式第一次，统计匹配的新增新闻数量
+            # 如果是incrementalmode或 current mode第一次，统计匹配的新增新闻数量
             if (mode == "incremental" and all_news_are_new) or (
                 mode == "current" and is_first_today
             ):
@@ -1106,7 +1106,7 @@ def count_word_frequency(
                 required_words = group["required"]
                 normal_words = group["normal"]
 
-                # 如果是"全部新闻"模式，所有标题都匹配第一个（唯一的）词组
+                # 如果是"全部新闻"mode，所有标题都匹配第一个（唯一的）词组
                 if len(word_groups) == 1 and word_groups[0]["group_key"] == "全部新闻":
                     group_key = group["group_key"]
                     word_stats[group_key]["count"] += 1
@@ -1142,7 +1142,7 @@ def count_word_frequency(
                 url = source_url
                 mobile_url = source_mobile_url
 
-                # 对于 current 模式，从历史统计信息中获取完整数据
+                # 对于 current mode，从历史统计信息中获取完整数据
                 if (
                     mode == "current"
                     and title_info
@@ -1181,7 +1181,7 @@ def count_word_frequency(
                 # 判断是否为新增
                 is_new = False
                 if all_news_are_new:
-                    # 增量模式下所有处理的新闻都是新增，或者当天第一次的所有新闻都是新增
+                    # incrementalmode下所有处理的新闻都是新增，或者当天第一次的所有新闻都是新增
                     is_new = True
                 elif new_titles and source_id in new_titles:
                     # 检查是否在新增列表中
@@ -1220,7 +1220,7 @@ def count_word_frequency(
                 else "频率词匹配"
             )
             print(
-                f"增量模式：当天第一次爬取，{total_input_news} 条新闻中有 {matched_new_count} 条{filter_status}"
+                f"incrementalmode：当天第一次爬取，{total_input_news} 条新闻中有 {matched_new_count} 条{filter_status}"
             )
         else:
             if new_titles:
@@ -1232,12 +1232,12 @@ def count_word_frequency(
                     else "匹配频率词"
                 )
                 print(
-                    f"增量模式：{total_new_count} 条新增新闻中，有 {matched_new_count} 条{filter_status}"
+                    f"incrementalmode：{total_new_count} 条新增新闻中，有 {matched_new_count} 条{filter_status}"
                 )
                 if matched_new_count == 0 and len(word_groups) > 1:
-                    print("增量模式：没有新增新闻匹配频率词，将不会发送通知")
+                    print("incrementalmode：没有新增新闻匹配频率词，将不会发送通知")
             else:
-                print("增量模式：未检测到新增新闻")
+                print("incrementalmode：未检测到新增新闻")
     elif mode == "current":
         total_input_news = sum(len(titles) for titles in results_to_process.values())
         if is_first_today:
@@ -1247,7 +1247,7 @@ def count_word_frequency(
                 else "频率词匹配"
             )
             print(
-                f"当前榜单模式：当天第一次爬取，{total_input_news} 条当前榜单新闻中有 {matched_new_count} 条{filter_status}"
+                f"currentmode：当天第一次爬取，{total_input_news} 条current新闻中有 {matched_new_count} 条{filter_status}"
             )
         else:
             matched_count = sum(stat["count"] for stat in word_stats.values())
@@ -1257,7 +1257,7 @@ def count_word_frequency(
                 else "频率词匹配"
             )
             print(
-                f"当前榜单模式：{total_input_news} 条当前榜单新闻中有 {matched_count} 条{filter_status}"
+                f"currentmode：{total_input_news} 条current新闻中有 {matched_count} 条{filter_status}"
             )
 
     stats = []
@@ -1304,10 +1304,10 @@ def prepare_report_data(
     """准备报告数据"""
     processed_new_titles = []
 
-    # 在增量模式下隐藏新增新闻区域
+    # 在incrementalmode下隐藏新增新闻区域
     hide_new_section = mode == "incremental"
 
-    # 只有在非隐藏模式下才处理新增新闻部分
+    # 只有在非隐藏mode下才处理新增新闻部分
     if not hide_new_section:
         filtered_new_titles = {}
         if new_titles and id_to_name:
@@ -1561,11 +1561,11 @@ def generate_html_report(
     """生成HTML报告"""
     if is_daily_summary:
         if mode == "current":
-            filename = "当前榜单汇总.html"
+            filename = "current summary.html"
         elif mode == "incremental":
-            filename = "当日增量.html"
+            filename = "当日incremental.html"
         else:
-            filename = "当日汇总.html"
+            filename = "daily.html"
     else:
         filename = f"{format_time_filename()}.html"
 
@@ -2043,11 +2043,11 @@ def render_html_content(
     # 处理报告类型显示
     if is_daily_summary:
         if mode == "current":
-            html += "当前榜单"
+            html += "current"
         elif mode == "incremental":
-            html += "增量模式"
+            html += "incrementalmode"
         else:
-            html += "当日汇总"
+            html += "daily"
     else:
         html += "实时分析"
 
@@ -2635,9 +2635,9 @@ def render_feishu_content(
 
     if not text_content:
         if mode == "incremental":
-            mode_text = "增量模式下暂无新增匹配的热点词汇"
+            mode_text = "incrementalmode下暂无新增匹配的热点词汇"
         elif mode == "current":
-            mode_text = "当前榜单模式下暂无匹配的热点词汇"
+            mode_text = "currentmode下暂无匹配的热点词汇"
         else:
             mode_text = "暂无匹配的热点词汇"
         text_content = f"📭 {mode_text}\n\n"
@@ -2733,9 +2733,9 @@ def render_dingtalk_content(
 
     if not report_data["stats"]:
         if mode == "incremental":
-            mode_text = "增量模式下暂无新增匹配的热点词汇"
+            mode_text = "incrementalmode下暂无新增匹配的热点词汇"
         elif mode == "current":
-            mode_text = "当前榜单模式下暂无匹配的热点词汇"
+            mode_text = "currentmode下暂无匹配的热点词汇"
         else:
             mode_text = "暂无匹配的热点词汇"
         text_content += f"📭 {mode_text}\n\n"
@@ -2851,9 +2851,9 @@ def split_content_into_batches(
         and not report_data["failed_ids"]
     ):
         if mode == "incremental":
-            mode_text = "增量模式下暂无新增匹配的热点词汇"
+            mode_text = "incrementalmode下暂无新增匹配的热点词汇"
         elif mode == "current":
-            mode_text = "当前榜单模式下暂无匹配的热点词汇"
+            mode_text = "currentmode下暂无匹配的热点词汇"
         else:
             mode_text = "暂无匹配的热点词汇"
         simple_content = f"📭 {mode_text}\n\n"
@@ -3204,7 +3204,7 @@ def split_content_into_batches(
 def send_to_notifications(
     stats: List[Dict],
     failed_ids: Optional[List] = None,
-    report_type: str = "当日汇总",
+    report_type: str = "daily",
     new_titles: Optional[Dict] = None,
     id_to_name: Optional[Dict] = None,
     update_info: Optional[Dict] = None,
@@ -3665,14 +3665,14 @@ TrendRadar 热点分析报告
 
         try:
             if use_tls:
-                # TLS 模式
+                # TLS mode
                 server = smtplib.SMTP(smtp_server, smtp_port, timeout=30)
                 server.set_debuglevel(0)  # 设为1可以查看详细调试信息
                 server.ehlo()
                 server.starttls()
                 server.ehlo()
             else:
-                # SSL 模式
+                # SSL mode
                 server = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=30)
                 server.set_debuglevel(0)
                 server.ehlo()
@@ -3729,9 +3729,9 @@ def send_to_ntfy(
     """发送到ntfy（支持分批发送，严格遵守4KB限制）"""
     # 避免 HTTP header 编码问题
     report_type_en_map = {
-        "当日汇总": "Daily Summary",
-        "当前榜单汇总": "Current Ranking",
-        "增量更新": "Incremental Update",
+        "daily": "Daily Summary",
+        "current summary": "Current Ranking",
+        "incremental更新": "Incremental Update",
     }
     report_type_en = report_type_en_map.get(report_type, report_type)
 
@@ -3869,31 +3869,31 @@ def send_to_ntfy(
 class NewsAnalyzer:
     """新闻分析器"""
 
-    # 模式策略定义
+    # mode策略定义
     MODE_STRATEGIES = {
         "incremental": {
-            "mode_name": "增量模式",
-            "description": "增量模式（只关注新增新闻，无新增时不推送）",
-            "realtime_report_type": "实时增量",
-            "summary_report_type": "当日汇总",
+            "mode_name": "incrementalmode",
+            "description": "incrementalmode（只关注新增新闻，无新增时不推送）",
+            "realtime_report_type": "incremental",
+            "summary_report_type": "daily",
             "should_send_realtime": True,
             "should_generate_summary": True,
             "summary_mode": "daily",
         },
         "current": {
-            "mode_name": "当前榜单模式",
-            "description": "当前榜单模式（当前榜单匹配新闻 + 新增新闻区域 + 按时推送）",
-            "realtime_report_type": "实时当前榜单",
-            "summary_report_type": "当前榜单汇总",
+            "mode_name": "currentmode",
+            "description": "currentmode（current匹配新闻 + 新增新闻区域 + 按时推送）",
+            "realtime_report_type": "实时current",
+            "summary_report_type": "current汇总",
             "should_send_realtime": True,
             "should_generate_summary": True,
             "summary_mode": "current",
         },
         "daily": {
-            "mode_name": "当日汇总模式",
-            "description": "当日汇总模式（所有匹配新闻 + 新增新闻区域 + 按时推送）",
+            "mode_name": "dailymode",
+            "description": "dailymode（所有匹配新闻 + 新增新闻区域 + 按时推送）",
             "realtime_report_type": "",
-            "summary_report_type": "当日汇总",
+            "summary_report_type": "daily",
             "should_send_realtime": False,
             "should_generate_summary": True,
             "summary_mode": "daily",
@@ -3960,7 +3960,7 @@ class NewsAnalyzer:
             print(f"版本检查出错: {e}")
 
     def _get_mode_strategy(self) -> Dict:
-        """获取当前模式的策略配置"""
+        """获取当前mode的策略配置"""
         return self.MODE_STRATEGIES.get(self.report_mode, self.MODE_STRATEGIES["daily"])
 
     def _has_notification_configured(self) -> bool:
@@ -3985,10 +3985,10 @@ class NewsAnalyzer:
     ) -> bool:
         """检查是否有有效的新闻内容"""
         if self.report_mode in ["incremental", "current"]:
-            # 增量模式和current模式下，只要stats有内容就说明有匹配的新闻
+            # incrementalmode和currentmode下，只要stats有内容就说明有匹配的新闻
             return any(stat["count"] > 0 for stat in stats)
         else:
-            # 当日汇总模式下，检查是否有匹配的频率词新闻或新增新闻
+            # dailymode下，检查是否有匹配的频率词新闻或新增新闻
             has_matched_news = any(stat["count"] > 0 for stat in stats)
             has_new_news = bool(
                 new_titles and any(len(titles) > 0 for titles in new_titles.values())
@@ -4147,7 +4147,7 @@ class NewsAnalyzer:
     def _generate_summary_report(self, mode_strategy: Dict) -> Optional[str]:
         """生成汇总报告（带通知）"""
         summary_type = (
-            "当前榜单汇总" if mode_strategy["summary_mode"] == "current" else "当日汇总"
+            "current summary" if mode_strategy["summary_mode"] == "current" else "daily"
         )
         print(f"生成{summary_type}报告...")
 
@@ -4189,7 +4189,7 @@ class NewsAnalyzer:
 
     def _generate_summary_html(self, mode: str = "daily") -> Optional[str]:
         """生成汇总HTML"""
-        summary_type = "当前榜单汇总" if mode == "current" else "当日汇总"
+        summary_type = "current summary" if mode == "current" else "daily"
         print(f"生成{summary_type}HTML...")
 
         # 加载分析数据
@@ -4234,8 +4234,8 @@ class NewsAnalyzer:
             print("通知功能已启用，将发送通知")
 
         mode_strategy = self._get_mode_strategy()
-        print(f"报告模式: {self.report_mode}")
-        print(f"运行模式: {mode_strategy['description']}")
+        print(f"报告mode: {self.report_mode}")
+        print(f"运行mode: {mode_strategy['description']}")
 
     def _crawl_data(self) -> Tuple[Dict, Dict, List]:
         """执行数据爬取"""
@@ -4264,7 +4264,7 @@ class NewsAnalyzer:
     def _execute_mode_strategy(
         self, mode_strategy: Dict, results: Dict, id_to_name: Dict, failed_ids: List
     ) -> Optional[str]:
-        """执行模式特定逻辑"""
+        """执行mode特定逻辑"""
         # 获取当前监控平台ID列表
         current_platform_ids = [platform["id"] for platform in CONFIG["PLATFORMS"]]
 
@@ -4272,7 +4272,7 @@ class NewsAnalyzer:
         time_info = Path(save_titles_to_file(results, id_to_name, failed_ids)).stem
         word_groups, filter_words = load_frequency_words()
 
-        # current模式下，实时推送需要使用完整的历史数据来保证统计信息的完整性
+        # currentmode下，实时推送需要使用完整的历史数据来保证统计信息的完整性
         if self.report_mode == "current":
             # 加载完整的历史数据（已按当前平台过滤）
             analysis_data = self._load_analysis_data()
@@ -4287,7 +4287,7 @@ class NewsAnalyzer:
                 ) = analysis_data
 
                 print(
-                    f"current模式：使用过滤后的历史数据，包含平台：{list(all_results.keys())}"
+                    f"currentmode：使用过滤后的历史数据，包含平台：{list(all_results.keys())}"
                 )
 
                 stats, html_file = self._run_analysis_pipeline(
@@ -4356,7 +4356,7 @@ class NewsAnalyzer:
                     mode_strategy["summary_mode"]
                 )
             else:
-                # daily模式：直接生成汇总报告并发送通知
+                # dailymode：直接生成汇总报告并发送通知
                 summary_html = self._generate_summary_report(mode_strategy)
 
         # 打开浏览器（仅在非容器环境）
