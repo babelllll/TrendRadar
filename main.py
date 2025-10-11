@@ -3730,8 +3730,8 @@ def send_to_ntfy(
     # 避免 HTTP header 编码问题
     report_type_en_map = {
         "daily": "Daily Summary",
-        "current summary": "Current Ranking",
-        "incremental更新": "Incremental Update",
+        "current summary": "Current Summary",
+        "incremental Update": "Incremental Update",
     }
     report_type_en = report_type_en_map.get(report_type, report_type)
 
